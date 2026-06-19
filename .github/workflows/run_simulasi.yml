@@ -1,0 +1,37 @@
+name: Jalankan Forward Modeling Geolistrik 2D
+
+# Mengatur agar program berjalan secara manual saat Anda menekan tombol di GitHub
+on:
+  workflow_dispatch:
+
+jobs:
+  run-simulation:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Mengunduh kode dari repositori Anda ke server GitHub
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    # 2. Menyiapkan lingkungan Python di server GitHub
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    # 3. Menginstal library geofisika yang dibutuhkan
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # 4. Mengeksekusi script forward modeling Anda
+    - name: Run Forward Modeling Script
+      run: python forward_modeling_2d.py
+
+    # 5. Menyimpan 9 gambar hasil simulasi agar bisa Anda unduh langsung
+    - name: Upload Hasil Gambar
+      uses: actions/upload-artifact@v4
+      with:
+        name: hasil-kontur-semut-2d
+        path: hasil_simulasi_forward/
